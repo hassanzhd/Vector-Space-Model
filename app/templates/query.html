@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <title>Vector Space Model | Assignment # 2</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        <a href="/">  
+          VECTOR SPACE MODEL MODEL 
+        </a>
+        &nbsp;|&nbsp;
+        <a href="/static/SampleQueries.txt">
+          SAMPLE QUERIES
+        </a>
+        &nbsp;|&nbsp;
+        <a href="/static/index.txt">
+        INDEX
+        </a>
+      </h1>
+      <div class="result flex-center-y">
+        <h2>QUERY: {{query}}</h2>
+        <p>Found documents:</p>
+        {% if documents %}
+        <p class="documents">
+          {% for item in documents %}
+          <a href=/static/ShortStories/{{item[1]}}.txt>{Document: {{item[1]}}, Score: {{item[0]}}}, </a>  
+          {% endfor %}
+        </p>
+        {% else %}
+        <p>No documents retreived</p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
