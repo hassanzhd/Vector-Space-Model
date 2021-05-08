@@ -1,6 +1,16 @@
-# BOOLEAN RETRIEVAL MODEL
+# VECTOR SPACE MODEL
 
-The following assignment implements "Vector Space Model" which supports querying of document using terms and a threshold value alpha
+The following assignment implements "Vector Space Model" which supports querying of document using terms and a threshold value alpha.
+
+Queries are done on the basis of cosine similarity between tf-idf of query and document vectors.
+
+- tf-idf (product of term frequeny and inverse document frequency)
+  - tf-idf = tf \* idf
+- tf (term frequency): Number of times term appeared in document
+- idf (inverse document frequency) - ratio of total documents and document frequency
+  - idf = N / Df<sub>term</sub>
+- cosine similarity (how relevant the query and document are to one another)
+  - sim(Document, Query) = (Document \* Query) / | Document | \* | Query |
 
 #### DATA SET:
 
