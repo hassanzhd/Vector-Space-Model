@@ -84,3 +84,69 @@ class VectorSpaceModel: # helper class implementing the model
     except FileNotFoundError:
       self.createIndex()
       self.writeInvertedIndex()
+
+  def createQueryVector(self, __queryTerms):
+    queryVector = {}
+
+    for word in __queryTerms:
+      if (not (word in self.stopWords) and (word in self.index)):
+        if(not (word in queryVector)):
+          queryVector[word] = {'termFrequency' : 0, 'tf-id-frequency' : 0 }
+          queryVector[word]['termFrequency'] += 1
+        else:
+            queryVector[word]['termFrequency'] += 1
+
+    for word in queryVector:
+      queryVector[word]['tf-id-frequency'] = queryVector[word]['termFrequency'] * self.index[word]['idf']
+
+    return (queryVector)
+
+  def dotProduct(self, __queryVector, __document):
+    sumOfProducts = 0
+
+    for word in __queryVector:
+      sumOfProducts += (__queryVector[word]['tf-id-frequency'] * self.index[word]['tf-id-frequencies'][__document])
+
+    return (sumOfProducts)
+
+  def magnitudeProduct(self, __queryVector, __document):
+    queryMagnitude = 0
+    documentMagnitude = 0
+
+    for word in __queryVector:
+      queryMagnitude += pow(__queryVector[word]['tf-id-frequency'], 2)
+      documentMagnitude += pow(self.index[word]['tf-id-frequencies'][__document], 2)
+
+    queryMagnitude = sqrt(queryMagnitude)
+    documentMagnitude = sqrt(documentMagnitude)
+
+    return (queryMagnitude * documentMagnitude)
+
+  def cosineSimilarity(self, __queryVector):
+    similarityValues = []
+
+    for i in range(self.totalNumberOfDocuments):
+      try:
+        similarityValues.append((self.dotProduct(__queryVector, i) / self.magnitudeProduct(__queryVector, i), i + 1))
+      except:
+        pass
+
+    similarityValues.sort(reverse=True)
+
+    return (similarityValues)
+
+  def filterDocuments(self, __documents, __alphaValue):
+    filteredDocuments = []
+
+    for document in __documents:
+      if document[0] >= __alphaValue:
+        filteredDocuments.append(document)
+
+    return (filteredDocuments)
+
+  def executeQuery(self, __query):
+    parsedQuery = nltk.word_tokenize(__query)
+    queryVector = self.createQueryVector(parsedQuery[0:-1])
+    documents = self.cosineSimilarity(queryVector)
+    filteredDocuments = self.filterDocuments(documents, float(parsedQuery[-1]))
+    return (filteredDocuments)
